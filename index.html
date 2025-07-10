@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>共享日记模板 · 一键生成</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      margin: 2rem;
+      line-height: 1.6;
+      background: #f7faff;
+      color: #222;
+    }
+    h2 {
+      color: #4E8CFF;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: .7rem 1.5rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: .7rem;
+      background: linear-gradient(90deg, #4E8CFF 60%, #7FC8F8 100%);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #4e8cff22;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #7FC8F8 60%, #4E8CFF 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    textarea {
+      width: 100%;
+      height: 70vh;
+      margin-top: 1.2rem;
+      font-family: inherit;
+      font-size: 1rem;
+      border-radius: .7rem;
+      border: 1px solid #d0e3ff;
+      background: #fff;
+      padding: 1rem;
+      box-sizing: border-box;
+      box-shadow: 0 1px 4px #4e8cff11;
+      resize: vertical;
+      transition: border 0.2s;
+    }
+    textarea:focus {
+      border: 1.5px solid #4E8CFF;
+      outline: none;
+    }
+    .location-group {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem;
+      overflow-x: auto;
+      padding-bottom: .3rem;
+      scrollbar-width: thin;
+    }
+    .location-group::-webkit-scrollbar {
+      height: 6px;
+    }
+    .location-group::-webkit-scrollbar-thumb {
+      background: #e3eefe;
+      border-radius: 3px;
+    }
+    .location-group .loc-btn {
+      background: #f0f6ff;
+      border: 1.5px solid #d0e3ff;
+      color: #4E8CFF;
+      border-radius: .5rem;
+      padding: .4rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, border 0.2s, color 0.2s, box-shadow 0.15s;
+      box-shadow: 0 1px 2px #4e8cff11;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      min-width: 90px;
+    }
+    .location-group .loc-btn.active,
+    .location-group .loc-btn:focus,
+    .location-group .loc-btn:hover {
+      background: linear-gradient(90deg, #4E8CFF 60%, #7FC8F8 100%);
+      color: #fff;
+      border: 1.5px solid #4E8CFF;
+      box-shadow: 0 2px 8px #4e8cff22;
+    }
+    /* 响应式布局增强 */
+    @media (max-width: 900px) {
+      body {
+        margin: 1rem;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: .6rem 1.1rem;
+      }
+      textarea {
+        font-size: .98rem;
+        height: 50vh;
+        padding: .8rem;
+      }
+    }
+    @media (max-width: 600px) {
+      body {
+        margin: .5rem;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: .7rem;
+      }
+      .location-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: .3rem;
+        font-size: .95rem;
+      }
+      .location-group .loc-btn {
+        width: calc(33.33% - .3rem);
+        min-width: 0;
+        max-width: 100%;
+        font-size: .98rem;
+        padding: .4rem 0;
+        margin-bottom: .2rem;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        font-size: 1rem;
+        padding: .7rem 0;
+        margin-bottom: .7rem;
+      }
+      textarea {
+        font-size: .97rem;
+        height: 35vh;
+        padding: .7rem;
+      }
+    }
+    @media (max-width: 400px) {
+      h2 {
+        font-size: .95rem;
+      }
+      button, .location-group .loc-btn {
+        font-size: .9rem;
+        padding: .3rem 0;
+      }
+      textarea {
+        font-size: .93rem;
+        height: 25vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>共享日记模板 · 今日模板</h2>
+  <div class="location-group">
+    <span style="font-weight:500;color:#4E8CFF;">位置选择：</span>
+    <button type="button" class="loc-btn active" data-loc="">实际定位</button>
+    <button type="button" class="loc-btn" data-loc="beijing">中国北京</button>
+    <button type="button" class="loc-btn" data-loc="shanghai">中国上海</button>
+    <button type="button" class="loc-btn" data-loc="taiwan">中国台湾</button>
+    <button type="button" class="loc-btn" data-loc="tokyo">日本东京</button>
+    <button type="button" class="loc-btn" data-loc="osaka">日本大阪</button>
+    <button type="button" class="loc-btn" data-loc="newyork">美国纽约</button>
+    <button type="button" class="loc-btn" data-loc="losangeles">美国洛杉矶</button>
+    <button type="button" class="loc-btn" data-loc="hawaii">美国夏威夷</button>
+    <button type="button" class="loc-btn" data-loc="london">英国伦敦</button>
+    <button type="button" class="loc-btn" data-loc="melbourne">澳大利亚墨尔本</button>
+  </div>
+  <input type="hidden" id="mockLocation" value="">
+  <button id="copyBtn">生成并复制 ✨</button>
+  <textarea id="out" placeholder="点击按钮后，这里会自动填充 Markdown…"></textarea>
+
+  <!-- 引入 moment.js 及时区数据（CDN） -->
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+
+  <script>
+    // ================= 工具函数 =================
+
+    /**
+     * 通过经纬度反向地理编码，获取国家、省、市、时区ID
+     * @param {number} lat 纬度
+     * @param {number} lon 经度
+     * @returns {Promise<{country:string, region:string, city:string, tzID:string}>}
+     */
+    async function reverseGeocode(lat, lon) {
+      const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=zh`;
+      const d = await (await fetch(url)).json();
+      return {
+        country: d.countryName || "",
+        region: d.principalSubdivision || "",
+        city: d.city || d.locality || "",
+        tzID: d.timezone || ""
+      };
+    }
+
+    /**
+     * IP 定位兜底，获取城市、省份、国家、时区ID
+     * @returns {Promise<{country:string, region:string, city:string, tzID:string}>}
+     */
+    async function ipLocation() {
+      try {
+        const r = await fetch("https://ip-api.com/json/?lang=zh-CN");
+        const j = await r.json();
+        if (j.status === "success") {
+          return {
+            country: j.country || "",
+            region: j.regionName || "",
+            city: j.city || "",
+            tzID: j.timezone || ""
+          };
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    /**
+     * 兜底时区缩写（如 CST/JST 等）
+     * @param {string} abbr 原缩写
+     * @param {string} tzID 时区ID
+     * @returns {string}
+     */
+    function fixTzAbbr(abbr, tzID) {
+      const map = {
+        "Asia/Tokyo": "JST",
+        "Asia/Shanghai": "CST",
+        "Asia/Seoul": "KST",
+        "Asia/Hong_Kong": "HKT",
+        "Asia/Taipei": "CST",
+        "America/New_York": "EST",
+        "America/Los_Angeles": "PST",
+        "Europe/London": "BST",
+        "Europe/Paris": "CET",
+      };
+      if ((/^GMT\+9$/i.test(abbr) || /^UTC\+9$/i.test(abbr)) && map[tzID]) return map[tzID];
+      if ((/^GMT\+8$/i.test(abbr) || /^UTC\+8$/i.test(abbr)) && map[tzID]) return map[tzID];
+      if ((/^GMT-5$/i.test(abbr) || /^UTC-5$/i.test(abbr)) && map[tzID]) return map[tzID];
+      if ((/^GMT-8$/i.test(abbr) || /^UTC-8$/i.test(abbr)) && map[tzID]) return map[tzID];
+      return abbr;
+    }
+
+    // ================ 主函数：生成 Markdown =================
+
+    /**
+     * 构建日记 Markdown 模板
+     * @returns {Promise<string>}
+     */
+    async function buildNote() {
+      // 1️⃣ 当前日期与星期
+      const now = moment();
+      const weekdayCH = "日一二三四五六"[now.day()];
+
+      // 1.1 纪念日天数（如需可自定义）
+      // const startDate = moment("2025-01-01");
+      // const loveDays = now.diff(startDate, 'days') + 1;
+      let loveDays = '';
+
+      // 2️⃣ 获取位置与时区
+      let loc = { country: "", region: "", city: "", tzID: "" };
+      let via = "";
+
+      // 新增：模拟经纬度和时区
+      const mockCoords = {
+        beijing:   { lat: 39.9042, lon: 116.4074, tzID: "Asia/Shanghai" },
+        shanghai:  { lat: 31.2304, lon: 121.4737, tzID: "Asia/Shanghai" },
+        taiwan:    { lat: 25.032969, lon: 121.565418, tzID: "Asia/Taipei" },
+        tokyo:     { lat: 35.6895, lon: 139.6917, tzID: "Asia/Tokyo" },
+        osaka:     { lat: 34.6937, lon: 135.5023, tzID: "Asia/Tokyo" },
+        newyork:   { lat: 40.7128, lon: -74.0060, tzID: "America/New_York" },
+        losangeles:{ lat: 34.0522, lon: -118.2437, tzID: "America/Los_Angeles" },
+        hawaii:    { lat: 21.3069, lon: -157.8583, tzID: "Pacific/Honolulu" },
+        london:    { lat: 51.5074, lon: -0.1278, tzID: "Europe/London" },
+        melbourne: { lat: -37.8136, lon: 144.9631, tzID: "Australia/Melbourne" }
+      };
+
+      const mock = document.getElementById("mockLocation").value;
+      if (mock && mockCoords[mock]) {
+        loc = await reverseGeocode(mockCoords[mock].lat, mockCoords[mock].lon);
+        // 强制覆盖时区ID，确保缩写正确
+        loc.tzID = mockCoords[mock].tzID;
+        via = "模拟";
+      } else {
+        // 2.1 优先用浏览器 GPS
+        try {
+          const gps = await new Promise((res, rej) => {
+            if (!navigator.geolocation) return rej("no geo");
+            navigator.geolocation.getCurrentPosition(
+              pos => res({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+              err => rej(err),
+              { enableHighAccuracy: false, timeout: 8000 }
+            );
+          });
+          loc = await reverseGeocode(gps.lat, gps.lon);
+          via = "GPS";
+        } catch (_) {
+          // 2.2 失败则用 IP 定位
+          const ipLoc = await ipLocation();
+          if (ipLoc) { loc = ipLoc; via = "IP"; }
+          else { via = "FAIL"; }
+        }
+      }
+
+      // 2.3 计算时区缩写
+      let tzAbbr = "";
+      if (loc.tzID) {
+        tzAbbr = Intl.DateTimeFormat("en", { timeZone: loc.tzID, timeZoneName: "short" })
+          .formatToParts(new Date())
+          .find(p => p.type === "timeZoneName").value;
+        tzAbbr = fixTzAbbr(tzAbbr, loc.tzID);
+      } else {
+        loc.tzID = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        tzAbbr = Intl.DateTimeFormat("en", { timeZoneName: "short" })
+          .formatToParts(new Date())
+          .find(p => p.type === "timeZoneName").value;
+        tzAbbr = fixTzAbbr(tzAbbr, loc.tzID);
+      }
+
+      // 2.4 组装位置文本
+      const locString = loc.country && loc.region && loc.city
+        ? `${loc.country}${loc.region}${loc.city}`
+        : loc.country && loc.region
+          ? `${loc.country}${loc.region}`
+          : loc.country || loc.region || loc.city || loc.tzID.replace("_", " ");
+
+      const locNotice =
+        via === "IP" ? " ℹ️ 位置信息由 IP 推测，可能不精确"
+          : via === "FAIL" ? " ⚠️ 位置获取失败，已使用系统时区字符串"
+            : "";
+
+      // 3️⃣ 日段（如上午/下午）
+      const h = now.hour();
+      const tod =
+        h < 6 ? "🌙 凌晨" : h < 7 ? "🌅 清晨" : h < 8 ? "🌄 早晨" : h < 11 ? "🌤️ 上午" :
+          h < 14 ? "☀️ 中午" : h < 17 ? "🏞️ 下午" : h < 20 ? "🌇 傍晚" : h < 22 ? "🌃 晚上" : "🦉 深夜";
+
+      // 4️⃣ 天气（只显示中国上海）
+      let weather = [];
+      try {
+        const raw = (await (await fetch(`https://wttr.in/Shanghai?format=%C+%t`)).text()).trim();
+        let icon = "🌈";
+        const emoji = { "晴": "☀️", "多云": "⛅", "阴": "☁️", "雷": "⛈️", "雨": "🌧️", "雪": "❄️", "雾": "🌫️", "沙": "🌪️", "风": "💨" };
+        for (const k in emoji) if (raw.includes(k)) { icon = emoji[k]; break; }
+        weather.push(`${icon} 中国上海：${raw}`);
+      } catch {
+        weather.push(`⚠️ 中国上海：无法获取`);
+      }
+
+      // 5️⃣ 生成 Markdown
+      const title = `# 📅 日期：${now.format("YYYY.M.D")} 星期${weekdayCH}`;
+      const dateLine = `🕒 ${locString} ${tzAbbr} ${now.format("YYYY年M月D日")}（周${weekdayCH}）` +
+        `｜${now.format("HH:mm:ss")}（${tod}）｜第 ${now.format("WW")} 周` +
+        `｜今年第 ${now.dayOfYear()} 天` + (loveDays ? `｜纪念日第${loveDays}天` : '') + `${locNotice}`;
+      const weatherLine = weather.join("｜");
+      // 5.1 获取新闻
+      const newsList = await fetchNews();
+      const newsLine = newsList.length ? `**今日新闻：**\n` + newsList.map(n => `- ${n}`).join("\n") : "**今日新闻：** 暂无";
+
+      const md = `${title}
+
+### 日期&天气 📅🌈  
+${dateLine}\n${weatherLine}
+
+---
+${newsLine}
+
+---
+
+### 今日心情 🤭
+
+👉 请在对应心情前加 ✅ ，其余保持 ❌ 即可
+
+成员A：
+
+| 状态 | 表情 | 心情描述 | 状态 | 表情 | 心情描述 | 状态 | 表情 | 心情描述 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ❌ | 😄 | 喜悦满足 | ❌ | 😂 | 开心大笑 | ❌ | 😊 | 平和安静 |
+| ❌ | 😐 | 普通平淡 | ❌ | 😴 | 劳累想睡 | ❌ | 😩 | 精疲力尽 |
+| ❌ | 😟 | 焦虑不安 | ❌ | 😢 | 伤心失落 | ❌ | 😠 | 生气不爽 |
+| ❌ | 🤯 | 情绪压力 | ❌ | 🥰 | 爱意满满 | ❌ | 🤗 | 温暖感动 |
+| ❌ | 😎 | 自信干劲 |   |    |            |   |    |            |
+
+成员B：
+
+| 状态 | 表情 | 心情描述 | 状态 | 表情 | 心情描述 | 状态 | 表情 | 心情描述 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ❌ | 😄 | 喜悦满足 | ❌ | 😂 | 开心大笑 | ❌ | 😊 | 平和安静 |
+| ❌ | 😐 | 普通平淡 | ❌ | 😴 | 劳累想睡 | ❌ | 😩 | 精疲力尽 |
+| ❌ | 😟 | 焦虑不安 | ❌ | 😢 | 伤心失落 | ❌ | 😠 | 生气不爽 |
+| ❌ | 🤯 | 情绪压力 | ❌ | 🥰 | 爱意满满 | ❌ | 🤗 | 温暖感动 |
+| ❌ | 😎 | 自信干劲 |   |    |            |   |    |            |
+
+---
+
+### 今日
+
+### 成员A：
+
+### 成员B：
+
+### 评论：
+
+---
+
+### 图片、链接、事项（若有）
+`;
+      return md;
+    }
+
+    /**
+     * 获取今日新闻（Google News RSS）
+     * @returns {Promise<string[]>}
+     */
+    async function fetchNews() {
+      const rssUrl = "https://news.google.com/rss?hl=zh-CN&gl=CN&ceid=CN:zh-Hans";
+      const proxies = [
+        url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+        url => "https://corsproxy.io/?" + encodeURIComponent(url),
+        url => "https://thingproxy.freeboard.io/fetch/" + url
+      ];
+      for (const proxy of proxies) {
+        try {
+          const res = await fetch(proxy(rssUrl));
+          const text = await res.text();
+          const xml = new window.DOMParser().parseFromString(text, "text/xml");
+          const items = xml.querySelectorAll("item");
+          let news = [];
+          for (let i = 0; i < Math.min(3, items.length); i++) {
+            const title = items[i].querySelector("title").textContent;
+            const link = items[i].querySelector("link").textContent;
+            news.push(`[${title}](${link})`);
+          }
+          if (news.length) return news;
+        } catch (e) {
+          // 继续尝试下一个代理
+        }
+      }
+      return [];
+    }
+
+    // ================ 绑定按钮事件 =================
+
+    document.getElementById("copyBtn").onclick = async () => {
+      const md = await buildNote();
+      document.getElementById("out").value = md;
+      try {
+        await navigator.clipboard.writeText(md);
+        alert("✅ 模板已复制，去 Notion 粘贴吧！");
+      } catch {
+        alert("❗复制失败，请手动复制文本框内容。");
+      }
+    };
+
+    // 位置按钮切换逻辑
+    document.querySelectorAll('.loc-btn').forEach(btn => {
+      btn.onclick = function() {
+        document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('mockLocation').value = btn.dataset.loc;
+      };
+    });
+
+    // 微信内嵌浏览器检测与浮层提示
+    (function() {
+      var ua = navigator.userAgent.toLowerCase();
+      if (ua.indexOf('micromessenger') !== -1) {
+        var tip = document.createElement('div');
+        tip.id = 'wx-browser-tip';
+        tip.innerHTML = '<div style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);display:flex;align-items:flex-start;justify-content:center;"><div style="margin-top:12vw;background:#fffbe6;border-radius:1.2em;padding:2em 1.2em 1.2em 1.2em;box-shadow:0 4px 24px #0002;max-width:90vw;text-align:center;position:relative;"><span style="position:absolute;top:.7em;right:1em;font-size:1.5em;cursor:pointer;color:#888;" onclick=\'this.parentNode.parentNode.remove()\'>&times;</span><div style="font-size:1.2em;color:#d48806;font-weight:600;margin-bottom:.7em;">请在浏览器中打开</div><div style="font-size:1em;color:#333;line-height:1.7;">微信内打开可能显示异常<br>请点击右上角 <b>···</b> <br>选择 <b>“在浏览器中打开”</b><br><img src=\'https://img.alicdn.com/imgextra/i2/O1CN01QnQw2B1Qw2B1Qw2B1Qw2B1Qw2B.png\' alt=\'menu\' style=\'width:60px;margin:10px 0;\'></div></div></div>';
+        document.body.appendChild(tip);
+      }
+    })();
+  </script>
+</body>
+</html>
+<!--
+  HTML 注释示例：上面的 JS 可自行调整
+  常见问题：
+  • 若浏览器反定位弹窗 → 在地址栏左侧解锁“定位”
+  • 公司防火墙拦 IP 接口 → offsetToAbbr 仍能给常用缩写，或换成 ipinfo.io（把 ip-api.com 换成 https://ipinfo.io/json?lang=zh（月 5 万请求免费））
+  • 反向地理编码返回英文 → 把 localityLanguage=zh 改 =ja / =en 可指定语言；或自己写翻译表
+  • 无法获取天气 → 可能是防火墙拦截了 wttr.in 的请求，或该城市不支持天气查询
+  • 无法获取位置信息 → 确保浏览器允许地理位置访问，或手动修改位置
+  版权声明：本模板由 @小吴 和 @小陈 共同创作，欢迎分享和使用，但请勿用于商业用途。
+  使用说明：点击“生成并复制”按钮，模板会自动填充到下方文本框，并复制到剪贴板。
+  注意事项：请确保浏览器允许地理位置访问，否则可能无法获取位置信息。
+-->
