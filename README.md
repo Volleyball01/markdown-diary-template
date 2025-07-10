@@ -2,11 +2,7 @@
 一个使用 HTML+CSS 制作的简单美观的 Markdown 日记模板网页，用于生成结构化的每日记录。
 
 📎 在线访问页面：  
-<<<<<<< HEAD
 👉 [https://markdown-diary-template.vercel.app/](https://markdown-diary-template.vercel.app/)
-=======
-👉 [https://volleyball01.github.io/markdown-diary-template/](https://volleyball01.github.io/markdown-diary-template/)
->>>>>>> d4765a8cc83bdfd8c8e76833568eae81d31225a7
 
 📁 仓库地址：  
 👉 [https://github.com/Volleyball01/markdown-diary-template](https://github.com/Volleyball01/markdown-diary-template)
@@ -41,11 +37,7 @@
 ## 🚀 快速开始
 
 无需安装，只需打开网页链接即可使用：  
-<<<<<<< HEAD
 👉 [点击打开](https://markdown-diary-template.vercel.app/)
-=======
-👉 [点击打开](https://volleyball01.github.io/markdown-diary-template/)
->>>>>>> d4765a8cc83bdfd8c8e76833568eae81d31225a7
 
 ---
 
